@@ -1,8 +1,8 @@
 # How to deploy Ruby on Rails to AWS EC2
 
-*NOTE* This is a work in progress. 
+*NOTE* This is a work in progress.
 
-In this guide I will describe how to deploy a production Ruby on Rails project to Amazon's EC2 cloud service. 
+In this guide I will describe how to deploy a production Ruby on Rails project to Amazon's EC2 cloud service.
 
 The setup includes the following software:
 
@@ -52,6 +52,7 @@ TODO
 ```
 
 ### Setting up an Elastic IP address
+
 ```
 TODO
 ```
@@ -62,7 +63,7 @@ Update the firewall settings to allow outbound traffic
 Outbound rule for all traffic to 0.0.0.0/0
 TODO
 ```
-    
+
 
 ### Creating an SSH alias to quickly log into the server
 **First a quick warning**
@@ -123,7 +124,7 @@ sudo apt-get -y install nodejs
 
 ### Nginx
 
-Nginx is very fast server technology that is easy to configure and makes a great reverse proxy for our web server. 
+Nginx is very fast server technology that is easy to configure and makes a great reverse proxy for our web server.
 
 ```
 sudo apt-get install nginx
@@ -136,13 +137,13 @@ sudo apt-get install nginx
 sudo apt-get install mysql-server libmysqlclient-dev
 ```
 
-The MySql installer will ask your to provide a password for the root database user. Provide a strong password and take note of it. After the installer has completed we will run a handy tool MySql comes with that hardens security. 
+The MySql installer will ask your to provide a password for the root database user. Provide a strong password and take note of it. After the installer has completed we will run a handy tool MySql comes with that hardens security.
 
 ```
 mysql_sercure_installation
 ```
 
-You shouldn't have a any issues accepting the default answers. 
+You shouldn't have a any issues accepting the default answers.
 
 ### Create the MySql Database & User
 
@@ -166,7 +167,7 @@ mysql> exit
 
 ### Create SSH keys for use with Bitbucket
 
-An SSH key is required so the deployment tool can be authorized when it attempts to clone the project from the repository. I chose [Bitbucket]() for this tutorial because they offer free private repo hosting. [Gitlab]() also offers free hosting 
+An SSH key is required so the deployment tool can be authorized when it attempts to clone the project from the repository. I chose [Bitbucket]() for this tutorial because they offer free private repo hosting. [Gitlab]() also offers free hosting
     ssh-keygen -t rsa
 
 Add id_rsa.pub to bitbucket repository
@@ -213,11 +214,11 @@ generate mina configuration
 
 ```
 mina init
-```  
+```
 
 ```
 # change
-invoke :’rails:assets_precompile 
+invoke :’rails:assets_precompile
 # to
 invoke :’rails:assets_precompile:force'
 ```
@@ -238,7 +239,7 @@ when done with configuration run
 mina setup
 ```
 
-****** not needed? ******
+****** notes ******
 follow this tutorial
 https://www.digitalocean.com/community/tutorials/how-to-deploy-a-rails-app-with-unicorn-and-nginx-on-ubuntu-14-04
 
@@ -247,16 +248,15 @@ USER=ubuntu
 APP_NAME=<appname>/current/
 
 DONT FORGET TO ADD .gitignore files to the shared/ folders for unicorn config
-****** not needed? ******
+****** notes ******
 
 *use mina-unicorn*
 mina-nginx
 
+---
 
-
+# Resources and References (and many thanks)
 http://www.iredmail.org/docs/use.a.bought.ssl.certificate.html
 http://www.iredmail.org/docs/sql.bulk.create.mail.users.html
-
 https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04
-
 https://www.digitalocean.com/community/tutorials/understanding-nginx-http-proxying-load-balancing-buffering-and-caching
