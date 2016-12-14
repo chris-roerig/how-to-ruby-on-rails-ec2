@@ -239,6 +239,8 @@ when done with configuration run
 mina setup
 ```
 
+---
+```
 ****** notes ******
 follow this tutorial
 https://www.digitalocean.com/community/tutorials/how-to-deploy-a-rails-app-with-unicorn-and-nginx-on-ubuntu-14-04
@@ -252,7 +254,7 @@ DONT FORGET TO ADD .gitignore files to the shared/ folders for unicorn config
 
 *use mina-unicorn*
 mina-nginx
-
+```
 ---
 
 # Resources and References (and many thanks)
