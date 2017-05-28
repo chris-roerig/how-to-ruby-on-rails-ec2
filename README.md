@@ -104,6 +104,22 @@ Make sure RVM scripts are reachable by Mina (https://github.com/mina-deploy/mina
 echo 'source "$HOME/.rvm/scripts/rvm"' >> ~/.bashrc
 ```
 
+** Important! ** Update `.bashrc` to allow RVM in non internactive mode. If you don't do this Bundler and other gems will not be executed by Mina. 
+
+```
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+source "$HOME/.rvm/scripts/rvm"
+
+# ^ ^ ^ ^ this must be above the following line.
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+```
+
 ### Git
 
 Git is used by Mina during the deployment process to grab code from your repository.
