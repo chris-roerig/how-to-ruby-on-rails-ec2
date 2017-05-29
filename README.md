@@ -104,7 +104,7 @@ Make sure RVM scripts are reachable by Mina (https://github.com/mina-deploy/mina
 echo 'source "$HOME/.rvm/scripts/rvm"' >> ~/.bashrc
 ```
 
-** Important! ** Update `.bashrc` to allow RVM in non internactive mode. If you don't do this Bundler and other gems will not be executed by Mina. 
+** Important! ** Update `.bashrc` to allow RVM in non internactive mode. If you don't do this Bundler and other gems will not be executed by Mina. ((bundle: command not found)[https://github.com/mina-deploy/mina/issues/290#issuecomment-83104437])
 
 ```
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
