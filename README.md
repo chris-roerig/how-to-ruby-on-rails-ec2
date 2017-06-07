@@ -120,6 +120,14 @@ case $- in
 esac
 ```
 
+### Set the default environment to production
+
+```
+# from bash terminal run:
+
+export RAILS_ENV=production
+```
+
 ### Git
 
 Git is used by Mina during the deployment process to grab code from your repository.
@@ -253,6 +261,13 @@ when done with configuration run
 
 ```
 mina setup
+```
+
+### Setup shared configuration on the server
+
+```
+# add secret key base
+shared/config/secrets.yml
 ```
 
 ---
