@@ -106,6 +106,8 @@ echo 'source "$HOME/.rvm/scripts/rvm"' >> ~/.bashrc
 
 ** Important! ** Update `.bashrc` to allow RVM in non internactive mode. If you don't do this Bundler and other gems will not be executed by Mina. ((bundle: command not found)[https://github.com/mina-deploy/mina/issues/290#issuecomment-83104437])
 
+** NOTE ** This will probably go at the top of the `.bashrc` file
+
 ```
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
@@ -231,6 +233,103 @@ create config/unicorn.rb
 	# Set master PID location
 	pid "#{shared_dir}/pids/unicorn.pid"
 
+
+## Create Unicorn Init Script
+
+(Ripped from https://www.digitalocean.com/community/tutorials/how-to-deploy-a-rails-app-with-unicorn-and-nginx-on-ubuntu-14-04#create-unicorn-init-script)
+
+```
+sudo vi /etc/init.d/unicorn_appname
+```
+
+Copy and paste the following code block into it, and be sure to substitute USER and APP_NAME (highlighted) with the appropriate values:
+
+```
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          unicorn
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the unicorn app server
+# Description:       starts unicorn using start-stop-daemon
+### END INIT INFO
+
+set -e
+
+USAGE="Usage: $0 <start|stop|restart|upgrade|rotate|force-stop>"
+
+# app settings
+USER="deploy"
+APP_NAME="appname"
+APP_ROOT="/home/$USER/www/$APP_NAME/current"
+ENV="production"
+
+# environment settings
+PATH="/home/$USER/.rbenv/shims:/home/$USER/.rbenv/bin:$PATH"
+CMD="cd $APP_ROOT && bundle exec unicorn -c config/unicorn.rb -E $ENV -D"
+PID="$APP_ROOT/shared/pids/unicorn.pid"
+OLD_PID="$PID.oldbin"
+
+# make sure the app exists
+cd $APP_ROOT || exit 1
+
+sig () {
+  test -s "$PID" && kill -$1 `cat $PID`
+}
+
+oldsig () {
+  test -s $OLD_PID && kill -$1 `cat $OLD_PID`
+}
+
+case $1 in
+  start)
+    sig 0 && echo >&2 "Already running" && exit 0
+    echo "Starting $APP_NAME"
+    su - $USER -c "$CMD"
+    ;;
+  stop)
+    echo "Stopping $APP_NAME"
+    sig QUIT && exit 0
+    echo >&2 "Not running"
+    ;;
+  force-stop)
+    echo "Force stopping $APP_NAME"
+    sig TERM && exit 0
+    echo >&2 "Not running"
+    ;;
+  restart|reload|upgrade)
+    sig USR2 && echo "reloaded $APP_NAME" && exit 0
+    echo >&2 "Couldn't reload, starting '$CMD' instead"
+    $CMD
+    ;;
+  rotate)
+    sig USR1 && echo rotated logs OK && exit 0
+    echo >&2 "Couldn't rotate logs" && exit 1
+    ;;
+  *)
+    echo >&2 $USAGE
+    exit 1
+    ;;
+esac
+```
+
+Save and exit. This will allow you to use service unicorn_appname to start and stop your Unicorn and your Rails application.
+
+Update the script's permissions and enable Unicorn to start on boot:
+
+```
+sudo chmod 755 /etc/init.d/unicorn_appname
+sudo update-rc.d unicorn_appname defaults
+```
+
+Let's start it now:
+
+```
+sudo service unicorn_appname start
+```
 
 ## Configure the Mina deploy script
 
