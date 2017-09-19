@@ -206,14 +206,17 @@ Set the correct Mysql socket connection for Rails in shared/config/database.yaml
     mysqladmin -uroot -p variables | grep socket
 
 ## Unicorn
-create required deployment folders
+
+Add `gem 'unicorn'` to your Gemfile.
+
+Create required deployment folders
 
 ```
 mkdir -p shared/tmp/sockets
 mkdir -p shared/tmp/pids
 ```
 
-create config/unicorn.rb
+In your application create config/unicorn.rb
 
 	# set path to application
 	app_dir = File.expand_path("../..", __FILE__)
