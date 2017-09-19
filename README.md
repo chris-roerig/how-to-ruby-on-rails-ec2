@@ -90,11 +90,13 @@ echo "alias project-server='ssh -i ~/.ec2keys/rails-project.pem ubuntu@put-your-
 
 ### RVM
 
-RVM stands for Ruby Version Manager and provides the ability to easily install multiple Ruby versions. You can read more about it [here]().
+RVM stands for Ruby Version Manager and provides the ability to easily install multiple Ruby versions. You can read more about it [here](https://rvm.io/rvm/install).
 
 The following command will download and install Ruby and Ruby on Rails via RVM.
 
 ```
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+
 \curl -sSL https://get.rvm.io | bash -s stable --rails
 ```
 
@@ -104,9 +106,9 @@ Make sure RVM scripts are reachable by Mina (https://github.com/mina-deploy/mina
 echo 'source "$HOME/.rvm/scripts/rvm"' >> ~/.bashrc
 ```
 
-** Important! ** Update `.bashrc` to allow RVM in non internactive mode. If you don't do this Bundler and other gems will not be executed by Mina. ((bundle: command not found)[https://github.com/mina-deploy/mina/issues/290#issuecomment-83104437])
+**Important!** Update `.bashrc` to allow RVM in non internactive mode. If you don't do this Bundler and other gems will not be executed by Mina. ((bundle: command not found)[https://github.com/mina-deploy/mina/issues/290#issuecomment-83104437])
 
-** NOTE ** This will probably go at the top of the `.bashrc` file
+**NOTE** This will probably go at the top of the `.bashrc` file
 
 ```
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
