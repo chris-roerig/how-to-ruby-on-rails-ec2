@@ -164,7 +164,7 @@ Update /etc/nginx/sites-available/default
 ```
 upstream app {
     # Path to Unicorn SOCK file, as defined previously
-    server unix:/home/<user>/www/<yoursite>/current/shared/tmp/sockets/unicorn.sock fail_timeout=0;
+    server unix:/home/<user>/www/<yoursite>/shared/tmp/sockets/unicorn.sock fail_timeout=0;
 }
 
 server {
@@ -256,26 +256,26 @@ mkdir -p shared/tmp/pids
 ```
 
 In your application create config/unicorn.rb
+        # set path to application
+        # this will go to the root of the mina project
+        app_dir = File.expand_path("../../../../", __FILE__)
+        shared_dir = "#{app_dir}/shared"
+        working_directory "#{app_dir}/current"
 
-	# set path to application
-	app_dir = File.expand_path("../..", __FILE__)
-	shared_dir = "#{app_dir}/shared"
-	working_directory app_dir
+        # Set unicorn options
+        worker_processes 2
+        preload_app true
+        timeout 30
 
-	# Set unicorn options
-	worker_processes 2
-	preload_app true
-	timeout 30
+        # Set up socket location
+        listen "#{shared_dir}/tmp/sockets/unicorn.sock", :backlog => 64
 
-	# Set up socket location
-	listen "#{shared_dir}/sockets/unicorn.sock", :backlog => 64
+        # Logging
+        stderr_path "#{shared_dir}/log/unicorn.stderr.log"
+        stdout_path "#{shared_dir}/log/unicorn.stdout.log"
 
-	# Logging
-	stderr_path "#{shared_dir}/log/unicorn.stderr.log"
-	stdout_path "#{shared_dir}/log/unicorn.stdout.log"
-
-	# Set master PID location
-	pid "#{shared_dir}/pids/unicorn.pid"
+        # Set master PID location
+        pid "#{shared_dir}/tmp/pids/unicorn.pid"
 
 
 ## Create Unicorn Init Script
@@ -306,15 +306,15 @@ set -e
 USAGE="Usage: $0 <start|stop|restart|upgrade|rotate|force-stop>"
 
 # app settings
-USER="deploy"
-APP_NAME="appname"
-APP_ROOT="/home/$USER/www/$APP_NAME/current"
+USER="<user>"
+APP_NAME="<appname>"
+APP_ROOT="/home/$USER/www/$APP_NAME"
 ENV="production"
 
 # environment settings
 PATH="/home/$USER/.rbenv/shims:/home/$USER/.rbenv/bin:$PATH"
-CMD="cd $APP_ROOT && bundle exec unicorn -c config/unicorn.rb -E $ENV -D"
-PID="$APP_ROOT/shared/pids/unicorn.pid"
+CMD="cd $APP_ROOT/current && bundle exec unicorn -c config/unicorn.rb -E $ENV -D"
+PID="$APP_ROOT/shared/tmp/pids/unicorn.pid"
 OLD_PID="$PID.oldbin"
 
 # make sure the app exists
